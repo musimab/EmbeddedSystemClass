@@ -1,0 +1,3 @@
+/home/mustafa/Desktop/googletest/CMakeFiles/rebuild_cache.dir
+/home/mustafa/Desktop/googletest/CMakeFiles/edit_cache.dir
+/home/mustafa/Desktop/googletest/CMakeFiles/executeTests.dir

@@ -179,14 +179,20 @@ int main(void)
     /* USER CODE BEGIN 3 */
 
 
-	  mMeasurement_ptr->id   = CanReceiveData[0];
-	  mMeasurement_ptr->data = CanReceiveData[1];
+      mMeasurement_ptr->id = CanReceiveData[0];
+      if (mMeasurement_ptr->id != 70)
+          return -1;
+      mMeasurement_ptr->data = CanReceiveData[1];
 
-	  mMaxRange_ptr->id   = CanReceiveData[2];
-	  mMaxRange_ptr->data = CanReceiveData[3];
+      mMaxRange_ptr->id = CanReceiveData[2];
+      if (mMaxRange_ptr->id != 80)
+          return -1;
+      mMaxRange_ptr->data = CanReceiveData[3];
 
-	  mMinRange_ptr->id   = CanReceiveData[4];
-	  mMinRange_ptr->data = CanReceiveData[5];
+      mMinRange_ptr->id = CanReceiveData[4];
+      if (mMinRange_ptr->id != 90)
+          return -1;
+      mMinRange_ptr->data = CanReceiveData[5];
 
 
 	  lcd_clear();
@@ -204,14 +210,15 @@ int main(void)
 	  lcd_send_string(buf);
 	  HAL_Delay(100);
 
-      if(mMaxRange_ptr->data == 0 || mMinRange_ptr->data == 0)
-    	  state = ERROR_S; // State ERROR
-      else if(mMeasurement_ptr->data <= mMinRange_ptr->data)
-    	  state = HIGHSEQURITY; // State HIGHSEQURITY
-      else if(mMeasurement_ptr->data > mMinRange_ptr->data && mMeasurement_ptr->data <= mMaxRange_ptr->data)
-    	  state = LOWSEQURITY; // State LOWSEQURITY
-      else if(mMeasurement_ptr->data >= mMaxRange_ptr->data)
-    	  state = NO_OBJECT; // State NO_OBJECT
+      if (mMaxRange_ptr->data == 0 || mMinRange_ptr->data == 0) //#[T1.2]
+          state = ERROR_S; // State ERROR
+      else if (mMeasurement_ptr->data <= mMinRange_ptr->data) //#[T2.1]
+          state = HIGHSEQURITY; // State HIGHSEQURITY
+      else if (mMeasurement_ptr->data > mMinRange_ptr->data&& mMeasurement_ptr->data <= mMaxRange_ptr->data) //#[T2.3]
+          state = LOWSEQURITY; // State LOWSEQURITY
+      else if (mMeasurement_ptr->data >= mMaxRange_ptr->data) //#[T2.4]
+          state = NO_OBJECT; // State NO_OBJECT
+
 
       switch(state)
       {
@@ -226,7 +233,15 @@ int main(void)
 	    	  CanTransData[1]= mMotorSpeed.data; // mMotorSpeed =0
 	    	  CanTransData[0]= mMotorSpeed.id; // mMotorSpeed =0
 	    	  HAL_CAN_AddTxMessage(&hcan1, &pTxHeader, CanTransData, &mTxMailbox);// Send mMotorSpeed to MotorServoControl unit
-	    	  break;
+              if ((mMeasurement_ptr->data <= mMinRange_ptr->data) && (mMaxRange_ptr->data != 0 && mMinRange_ptr->data != 0)) //# [T1.4]
+                  state = HIGHSEQURITY;
+              else if ((mMeasurement_ptr->data > mMinRange_ptr->data) && (mMeasurement_ptr->data <= mMaxRange_ptr->data) && (mMaxRange_ptr->data != 0 && mMinRange_ptr->data != 0)) //#[T1.3]
+                  state = LOWSEQURITY;
+              else if ((mMeasurement_ptr->data >= mMaxRange_ptr->data) && (mMaxRange_ptr->data != 0 && mMinRange_ptr->data != 0)) //# [T1.1]
+                  state = NO_OBJECT;
+              else
+                  state = ERROR_S;
+              break;
 		  }
 		  case HIGHSEQURITY:
 		  {
@@ -239,6 +254,8 @@ int main(void)
 	    	  CanTransData[0]= mMotorSpeed.id; // mMotorSpeed = 0
 	    	  CanTransData[1]= mMotorSpeed.data;
 			  HAL_CAN_AddTxMessage(&hcan1, &pTxHeader, CanTransData, &mTxMailbox);// Send mMotorSpeed to MotorServoControl unit
+              if ((mMeasurement_ptr->data > mMinRange_ptr->data) && (mMeasurement_ptr->data <= mMaxRange_ptr->data)) //#[T2.2]
+                  state = LOWSEQURITY;
 			  break;
 		  }
 		  case LOWSEQURITY:

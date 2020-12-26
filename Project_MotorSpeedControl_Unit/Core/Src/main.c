@@ -118,15 +118,18 @@ void Init_Filter_Can_Config()
 
 void MotorServoControl(uint32_t A, uint32_t B,uint8_t speed)
 {
-	MotorSpeed_t mMotorSpeed;
-	// Can Receive Message from  LedControl Unit
-	mMotorSpeed.id = CanReceiveData[0];
-	mMotorSpeed.data = CanReceiveData[1];
+    MotorSpeed_t mMotorSpeed;
+    // Can Receive Message from  LedControl Unit
+    mMotorSpeed.id = CanReceiveData[0];
+    if (mMotorSpeed.id != 50) // ServoMotor_id :50
+        return -1;
+    mMotorSpeed.data = CanReceiveData[1];
 
-	// CAN Transmit Message to MaxMinRangeControl Unit
-	CanTransData[0] = mMotorSpeed.id;
-	CanTransData[1] = mMotorSpeed.data;
-	HAL_CAN_AddTxMessage(&hcan, &pTxHeader, CanTransData, &mTxMailbox);
+    // CAN Transmit Message to MaxMinRangeControl Unit
+    CanTransData[0] = mMotorSpeed.id;
+    CanTransData[1] = mMotorSpeed.data;
+    HAL_CAN_AddTxMessage(&hcan, &pTxHeader, CanTransData, &mTxMailbox);
+
 
 	switch(mMotorSpeed.data)
 	{

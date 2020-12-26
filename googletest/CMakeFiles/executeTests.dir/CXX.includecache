@@ -1,0 +1,40 @@
+#IncludeRegexLine: ^[ 	]*[#%][ 	]*(include|import)[ 	]*[<"]([^">]+)([">])
+
+#IncludeRegexScan: ^.*$
+
+#IncludeRegexComplain: ^$
+
+#IncludeRegexTransform: 
+
+/home/mustafa/Desktop/googletest/src/CAN_Tx_Rx.c
+StateLed.h
+/home/mustafa/Desktop/googletest/src/StateLed.h
+
+/home/mustafa/Desktop/googletest/src/MotorServoControl.c
+StateLed.h
+/home/mustafa/Desktop/googletest/src/StateLed.h
+
+/home/mustafa/Desktop/googletest/src/StateTest.cpp
+gtest/gtest.h
+-
+CAN_Tx_Rx.c
+/home/mustafa/Desktop/googletest/src/CAN_Tx_Rx.c
+StateLed.h
+/home/mustafa/Desktop/googletest/src/StateLed.h
+MotorServoControl.c
+/home/mustafa/Desktop/googletest/src/MotorServoControl.c
+ledcontrol.c
+/home/mustafa/Desktop/googletest/src/ledcontrol.c
+
+/home/mustafa/Desktop/googletest/src/ledcontrol.c
+StateLed.h
+/home/mustafa/Desktop/googletest/src/StateLed.h
+CAN_Tx_Rx.h
+/home/mustafa/Desktop/googletest/src/CAN_Tx_Rx.h
+
+include/CAN_Tx_Rx.h
+StateLed.h
+include/StateLed.h
+
+include/StateLed.h
+
