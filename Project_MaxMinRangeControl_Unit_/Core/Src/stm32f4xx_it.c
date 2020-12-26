@@ -224,7 +224,7 @@ void EXTI0_IRQHandler(void)
   for(int i=0; i<10000000;i++);
   mMaxRange_ptr->data++;
   if (mMaxRange_ptr->data == 30)
-      mMaxRange_ptr->data == 0;
+      mMaxRange_ptr->data = 0;
   /* USER CODE END EXTI0_IRQn 1 */
 }
 
@@ -256,7 +256,7 @@ void EXTI9_5_IRQHandler(void)
   for(int i=0; i<10000000;i++);
   mMinRange_ptr->data++;
   if (mMinRange_ptr->data == 10)
-      mMinRange_ptr->data == 0;
+      mMinRange_ptr->data = 0;
   /* USER CODE END EXTI9_5_IRQn 1 */
 }
 
